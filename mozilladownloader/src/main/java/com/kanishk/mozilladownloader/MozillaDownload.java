@@ -2,30 +2,89 @@ package com.kanishk.mozilladownloader;
 
 // Representation of a download instance
 
+import java.util.Date;
+
 public class MozillaDownload {
 
-	/*
-		uid: the unique ID assigned to a download instance
-		maxSpeed: user-configurable maximum speed of download (network speed by default)
-		status: scheduled/in-progress/paused/cancelled
-	*/
-	
 	private String uid;
 	private String url;
+	private String targetPath;
 	private Date scheduledTime;
 	private int timeout;
 	private double maxSpeed;
-	private int status;
+	private DownloadStatus status;
+	private long totalBytes;
+	private long downloadedBytes;
 
-	private MozillaDownload(Builder builder) {
-		this.uid = builder.uid;
-		this.uri = builder.uri;
-		this.scheduledTime = builder.scheduledTime;
-		this.timeout = builder.timeout;
-		this.status = builder.status;
+	public String getUid() {
+		return uid;
 	}
 
-	public static class Builder {
-		int timeout = Constants.	
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getTargetPath() {
+		return targetPath;
+	}
+
+	public void setTargetPath(String targetPath) {
+		this.targetPath = targetPath;
+	}
+
+	public Date getScheduledTime() {
+		return scheduledTime;
+	}
+
+	public void setScheduledTime(Date scheduledTime) {
+		this.scheduledTime = scheduledTime;
+	}
+
+	public int getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(int timeout) {
+		this.timeout = timeout;
+	}
+
+	public double getMaxSpeed() {
+		return maxSpeed;
+	}
+
+	public void setMaxSpeed(double maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
+
+	public DownloadStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(DownloadStatus status) {
+		this.status = status;
+	}
+
+	public long getTotalBytes() {
+		return totalBytes;
+	}
+
+	public void setTotalBytes(long totalBytes) {
+		this.totalBytes = totalBytes;
+	}
+
+	public long getDownloadedBytes() {
+		return downloadedBytes;
+	}
+
+	public void setDownloadedBytes(long downloadedBytes) {
+		this.downloadedBytes = downloadedBytes;
 	}
 }
