@@ -68,7 +68,7 @@ public class MozillaDownload {
 		return status;
 	}
 
-	public void setStatus(DownloadStatus status) {
+	protected void setStatus(DownloadStatus status) {
 		this.status = status;
 	}
 
