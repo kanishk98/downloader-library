@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MozillaDownloader</string>
+    <string name="mozilla_download">MozillaDownload</string>
 </resources>

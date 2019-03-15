@@ -2,9 +2,10 @@ package com.kanishk.mozilladownloader;
 
 // Representation of a download instance
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class MozillaDownload {
+public class MozillaDownload implements Serializable {
 
 	private String uid;
 	private String url;
