@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.PriorityQueue;
 
 import android.app.AlarmManager;
@@ -70,25 +71,35 @@ public class MozillaDownloader {
         alarmManager.set(AlarmManager.RTC_WAKEUP, download.getScheduledTime().getTime(), pendingIntent);
     }
 
-    public boolean pauseDownload(MozillaDownload download) {
-        return false;
+    public void pauseDownload(MozillaDownload download) {
+        if (download.getStatus() == DownloadStatus.RUNNING) {
+            download.setStatus(DownloadStatus.PAUSING);
+            Intent pauseIntent = new Intent();
+            pauseIntent.putExtra("MozillaDownload", download);
+            context.startService(pauseIntent);
+        }
     }
 
     public void cancelDownload(MozillaDownload download) {
         // intents cannot be distinguished based on their extras
-        if (download.getScheduledTime().getTime() <= System.currentTimeMillis()) {
-            // service in progress
+        if (download.getStatus() == DownloadStatus.RUNNING) {
             download.setStatus(DownloadStatus.CANCELLING);
             Intent cancelIntent = new Intent();
             cancelIntent.putExtra("MozillaDownload", download);
             context.startService(cancelIntent);
+        } else {
+            alarmManager.cancel(PendingIntent.getService(context, download.getUid().hashCode(),
+                    new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
         }
-        alarmManager.cancel(PendingIntent.getService(context, download.getUid().hashCode(),
-                new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
-    public boolean rescheduleDownload(MozillaDownload download) {
-        return false;
+    public void rescheduleDownload(MozillaDownload download, Date newTime) {
+        // download.getScheduledTime() != newTime
+        if (download.getStatus() == DownloadStatus.RUNNING) {
+            pauseDownload(download);
+        }
+        download.setScheduledTime(newTime);
+        scheduleDownload(download);
     }
 
     private static MozillaDownloader getDownloader() {
