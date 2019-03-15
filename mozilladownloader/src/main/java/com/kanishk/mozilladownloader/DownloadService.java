@@ -1,25 +1,22 @@
 package com.kanishk.mozilladownloader;
 
-import android.app.IntentService;
+import android.app.Service;
 import android.content.Intent;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.net.URL;
 import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 
-public class DownloadService extends IntentService {
+public class DownloadService extends Service {
 
     private final String TAG = getClass().getSimpleName();
-
-    public DownloadService(String name) {
-        super(name);
-    }
 
     private long findTotalBytes(URL url) {
         // TODO: Use Apache NetCommons library for finding size of FTP download
@@ -51,8 +48,12 @@ public class DownloadService extends IntentService {
         }
     }
 
+    private void cancel(MozillaDownload download) {
+        
+    }
+
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         try {
             // TODO: Investigate possible protocols that user may direct to
             // Current implementation supports FTP and HTTP only
@@ -62,11 +63,21 @@ public class DownloadService extends IntentService {
             ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
             FileChannel downloadChannel = new FileOutputStream(destinationFile, destinationFile.exists()).getChannel();
             download.setTotalBytes(findTotalBytes(url));
-            if (download.getTotalBytes() != -1) {
-                download(downloadChannel, readableByteChannel, download.getDownloadedBytes(), download.getTotalBytes());   
+            if (download.getStatus() == DownloadStatus.SCHEDULED && download.getTotalBytes() != -1) {
+                download.setStatus(DownloadStatus.RUNNING);
+                download(downloadChannel, readableByteChannel, download.getDownloadedBytes(), download.getTotalBytes());
+            } else if (download.getStatus() == DownloadStatus.CANCELLING) {
+                cancel(download);
             }
         } catch (java.io.IOException e) {
             Log.e(TAG, e.getStackTrace().toString());
         }
+        return Service.START_STICKY;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

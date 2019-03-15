@@ -66,7 +66,7 @@ public class MozillaDownloader {
         Intent downloadIntent = new Intent();
         downloadIntent.putExtra("MozillaDownload", download);
         // TODO: CHANGE IDENTIFIER OF PENDING INTENT TO UNIQUE INTEGER ID
-        PendingIntent pendingIntent = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.set(AlarmManager.RTC_WAKEUP, download.getScheduledTime().getTime(), pendingIntent);
     }
 
@@ -74,8 +74,17 @@ public class MozillaDownloader {
         return false;
     }
 
-    public boolean cancelDownload(MozillaDownload download) {
-        return false;
+    public void cancelDownload(MozillaDownload download) {
+        // intents cannot be distinguished based on their extras
+        if (download.getScheduledTime().getTime() <= System.currentTimeMillis()) {
+            // service in progress
+            download.setStatus(DownloadStatus.CANCELLING);
+            Intent cancelIntent = new Intent();
+            cancelIntent.putExtra("MozillaDownload", download);
+            context.startService(cancelIntent);
+        }
+        alarmManager.cancel(PendingIntent.getService(context, download.getUid().hashCode(),
+                new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     public boolean rescheduleDownload(MozillaDownload download) {
