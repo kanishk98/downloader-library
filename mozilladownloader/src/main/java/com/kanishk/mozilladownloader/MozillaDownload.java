@@ -11,11 +11,12 @@ public class MozillaDownload implements Serializable {
 	private String url;
 	private String targetPath;
 	private Date scheduledTime;
-	private int timeout;
+	private int timeout = 90;
 	private double maxSpeed;
 	private DownloadStatus status;
 	private long totalBytes;
-	private long downloadedBytes;
+	private long chunkBytes = 128 * 1024 * 1024;
+	private long downloadedBytes = 0;
 
 	public String getUid() {
 		return uid;
@@ -87,5 +88,13 @@ public class MozillaDownload implements Serializable {
 
 	public void setDownloadedBytes(long downloadedBytes) {
 		this.downloadedBytes = downloadedBytes;
+	}
+
+	public long getChunkBytes() {
+		return chunkBytes;
+	}
+
+	public void setChunkBytes(long chunkBytes) {
+		this.chunkBytes = chunkBytes;
 	}
 }
