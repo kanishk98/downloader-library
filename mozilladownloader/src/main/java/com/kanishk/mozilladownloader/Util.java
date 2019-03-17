@@ -1,13 +1,28 @@
 package com.kanishk.mozilladownloader;
 
+import android.content.Context;
 import android.util.Log;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.UUID;
 
 public class Util {
+    public static void saveDownload(MozillaDownload download, Context context) throws IOException {
+        File pausedDownloads = new File(context.getFilesDir(), Constants.PAUSED_DOWNLOADS);
+        pausedDownloads.mkdir();
+        File downloadFile = new File(pausedDownloads.getPath() + download.getUid());
+        FileOutputStream fileOutputStream = new FileOutputStream(downloadFile);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(download);
+        objectOutputStream.close();
+        fileOutputStream.close();
+    }
     public static String generateUID() {
         return UUID.randomUUID().toString();
     }

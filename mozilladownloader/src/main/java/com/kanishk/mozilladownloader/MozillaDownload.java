@@ -4,6 +4,9 @@ package com.kanishk.mozilladownloader;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
+import androidx.work.OneTimeWorkRequest;
 
 public class MozillaDownload implements Serializable {
 
@@ -17,6 +20,7 @@ public class MozillaDownload implements Serializable {
 	private long totalBytes;
 	private long chunkBytes = 128 * 1024 * 1024;
 	private long downloadedBytes = 0;
+	private List<OneTimeWorkRequest> workRequestList;
 
 	public String getUid() {
 		return uid;
@@ -96,5 +100,13 @@ public class MozillaDownload implements Serializable {
 
 	public void setChunkBytes(long chunkBytes) {
 		this.chunkBytes = chunkBytes;
+	}
+
+	public List<OneTimeWorkRequest> getWorkRequestList() {
+		return workRequestList;
+	}
+
+	public void setWorkRequestList(List<OneTimeWorkRequest> workRequestList) {
+		this.workRequestList = workRequestList;
 	}
 }
