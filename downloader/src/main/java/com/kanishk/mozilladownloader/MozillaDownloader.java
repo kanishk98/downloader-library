@@ -1,20 +1,15 @@
 package com.kanishk.mozilladownloader;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 
-import com.google.gson.Gson;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.PriorityQueue;
-
-import android.app.AlarmManager;
-import android.content.Intent;
 
 public class MozillaDownloader {
     
@@ -30,22 +25,6 @@ public class MozillaDownloader {
 
     private void setupDownloadStatusListener(DownloadStatusListener downloadStatusListener) {
         this.downloadStatusListener = downloadStatusListener;
-    }
-
-    private boolean flushQueueToDisk(PriorityQueue<MozillaDownload> queue) {
-        /*
-            need to store copies of scheduled downloads on disk
-            because AlarmManager clears after turning off device
-        */
-        File file = new File(context.getFilesDir() + "queue_file.json");
-        try {
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
-            bufferedWriter.write(new Gson().toJson(queue));
-            bufferedWriter.close();
-            return true;
-        } catch (IOException ioException) {
-            return false;
-        }
     }
 
     // TODO: What if app accidentally calls initDownloader() with a different context?
@@ -102,7 +81,14 @@ public class MozillaDownloader {
         scheduleDownload(download);
     }
 
-    private static MozillaDownloader getDownloader() {
+    public static MozillaDownloader getDownloader(Context context) {
+        try {
+            new MozillaDownloader().initDownloader(context);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        Log.d("MozillaDownloader", downloader.downloadQueue.toString());
         return downloader;
     }
 }

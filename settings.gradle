@@ -1,1 +1,1 @@
-include ':app', ':mozilladownloader'
+include ':app', ':downloader'
