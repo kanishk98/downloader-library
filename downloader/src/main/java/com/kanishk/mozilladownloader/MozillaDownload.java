@@ -16,7 +16,7 @@ public class MozillaDownload implements Serializable {
 	private Date scheduledTime;
 	private int timeout = 90;
 	private double maxSpeed;
-	private DownloadStatus status;
+	private int status;
 	private long totalBytes;
 	private long chunkBytes = 128 * 1024 * 1024;
 	private long downloadedBytes = 0;
@@ -73,11 +73,11 @@ public class MozillaDownload implements Serializable {
 		this.maxSpeed = maxSpeed;
 	}
 
-	public DownloadStatus getStatus() {
+	public int getStatus() {
 		return status;
 	}
 
-	protected void setStatus(DownloadStatus status) {
+	protected void setStatus(int status) {
 		this.status = status;
 	}
 

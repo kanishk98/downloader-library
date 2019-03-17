@@ -64,7 +64,7 @@ public class DownloadWorker extends Worker {
     	long startingPos = (long) map.get(Constants.STARTING_POS_DOWNLOAD);
     	MozillaDownload download = (MozillaDownload) map.get(Constants.MOZILLA_DOWNLOAD);
     	Context context = (Context) map.get(Constants.CONTEXT);
-    	DownloadStatus newStatus = (DownloadStatus) map.get(Constants.DOWNLOAD_STATUS);
+    	int newStatus = (int) map.get(Constants.DOWNLOAD_STATUS);
     	try {
             File destinationFile = new File(download.getTargetPath());
             URL url = new URL(download.getUrl());

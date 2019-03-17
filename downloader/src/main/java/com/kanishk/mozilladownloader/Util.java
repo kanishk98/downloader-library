@@ -13,6 +13,9 @@ import java.net.URL;
 import java.util.UUID;
 
 public class Util {
+
+    private static final String TAG = "Util";
+
     public static void saveDownload(MozillaDownload download, Context context) throws IOException {
         File pausedDownloads = new File(context.getFilesDir(), Constants.PAUSED_DOWNLOADS);
         pausedDownloads.mkdir();
@@ -34,23 +37,19 @@ public class Util {
         } catch (MalformedURLException e) {
             Log.e("Util", e.getStackTrace().toString());
         }
-        if (url == null) {
-            return -1;
-        }
         String protocol = url.getProtocol();
         if (protocol.equalsIgnoreCase("http") || protocol.equalsIgnoreCase("https")) {
             HttpURLConnection connection = null;
             try {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("HEAD");
-                Log.d("Util", String.valueOf(connection.getContentLength()));
-                return connection.getContentLength();
+                Log.d(TAG, String.valueOf(connection.getContentLength()));
+                return connection.getContentLength() < 0 ? Long.MAX_VALUE : connection.getContentLength();
             } catch (java.io.IOException e) {
                 Log.e("Util", e.getStackTrace().toString());
             } finally {
                 if (connection != null) {
                     connection.disconnect();
-                    return -1;
                 }
             }
         }

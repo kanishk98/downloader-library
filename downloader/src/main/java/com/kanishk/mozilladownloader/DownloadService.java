@@ -1,5 +1,6 @@
 package com.kanishk.mozilladownloader;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -17,11 +18,12 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkContinuation;
 import androidx.work.WorkManager;
 
-public class DownloadService extends Service {
+public class DownloadService extends IntentService {
 
     private final String TAG = getClass().getSimpleName();
 
     public DownloadService() {
+        super("DownloadService");
     }
 
     private void download(MozillaDownload download) {
@@ -78,13 +80,16 @@ public class DownloadService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    protected void onHandleIntent(@Nullable Intent intent) {
         // TODO: Investigate possible protocols that user may direct to
         // Current implementation supports FTP and HTTP only
         Log.d(TAG, "Alarm invoked, running service");
         Context context = (Context) intent.getSerializableExtra(Constants.CONTEXT);
         MozillaDownload download = (MozillaDownload) intent.getSerializableExtra(getString(R.string.mozilla_download));
-        download.setTotalBytes(Util.findTotalBytes(download.getUrl()));
+        long downloadSize = Util.findTotalBytes(download.getUrl());
+        Log.d(TAG, String.valueOf(downloadSize));
+        download.setTotalBytes(downloadSize);
+
         if (download.getStatus() == DownloadStatus.SCHEDULED && download.getTotalBytes() != -1) {
             download(download);
         } else if (download.getStatus() == DownloadStatus.CANCELLING) {
@@ -92,12 +97,5 @@ public class DownloadService extends Service {
         } else if (download.getStatus() == DownloadStatus.PAUSING) {
             pause(download, context);
         }
-        return Service.START_STICKY;
-    }
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 }
