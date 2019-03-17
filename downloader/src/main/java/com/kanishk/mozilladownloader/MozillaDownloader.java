@@ -15,7 +15,6 @@ public class MozillaDownloader {
     
     private static final MozillaDownloader downloader = new MozillaDownloader();
     private Context context;
-    private PriorityQueue<MozillaDownload> downloadQueue;
     private DownloadStatusListener downloadStatusListener;
     private AlarmManager alarmManager;
     
@@ -32,12 +31,6 @@ public class MozillaDownloader {
         // must call initDownloader() before using any other function from this class
         this.context = context;
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        downloadQueue = new PriorityQueue<>(0, new Comparator<MozillaDownload>() {
-            @Override
-            public int compare(MozillaDownload a, MozillaDownload b) {
-                return a.getUid().compareTo(b.getUid());
-            }
-        });
     }
 
     public void scheduleDownload(MozillaDownload download) {
@@ -88,7 +81,6 @@ public class MozillaDownloader {
             e.printStackTrace();
             return null;
         }
-        Log.d("MozillaDownloader", downloader.downloadQueue.toString());
         return downloader;
     }
 }
