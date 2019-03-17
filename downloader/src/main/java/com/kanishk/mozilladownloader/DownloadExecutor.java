@@ -42,7 +42,8 @@ public class DownloadExecutor extends IntentService {
 
     private void download(MozillaDownload download) {
         try {
-            download.setTargetPath(getApplicationContext().getFilesDir() + download.getUid());
+            download.setTargetPath(getApplicationContext().getExternalFilesDir("mozilla/") + download.getUid() +
+            download.getUrl().substring(download.getUrl().lastIndexOf(".")));
             File destinationFile = new File(download.getTargetPath());
             URL url = new URL(download.getUrl());
             ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
