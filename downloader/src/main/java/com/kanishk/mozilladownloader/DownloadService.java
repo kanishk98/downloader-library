@@ -34,7 +34,7 @@ public class DownloadService extends IntentService {
         WorkContinuation workContinuation = null;
         for (long i = 0; i < chunks; ++i) {
             Map map = new HashMap<>();
-            map.put(Constants.MOZILLA_DOWNLOAD, download);
+            map.put(Constants.MOZILLA_DOWNLOAD, Util.jsonifyDownload(download));
             map.put(Constants.DOWNLOAD_STATUS, DownloadStatus.SCHEDULED);
             map.put(Constants.STARTING_POS_DOWNLOAD, i);
             Data data = new Data.Builder()
@@ -73,6 +73,7 @@ public class DownloadService extends IntentService {
                     .setInputData(data)
                     .addTag(download.getUid())
                     .build();
+        WorkManager.getInstance().enqueue(cancellationRequest);
     }
 
     private void pause(MozillaDownload download, Context context) {

@@ -32,6 +32,7 @@ public class DownloadWorker extends Worker {
     	Log.d(TAG, "Downloading " + download.getUrl());
         long bytesDownloaded = downloadChannel.transferFrom(readableByteChannel, channelPosition, totalBytes);
         download.setDownloadedBytes(bytesDownloaded);
+        Log.d(TAG, Util.jsonifyDownload(download));
     }
 
     private void cancel(MozillaDownload download) throws IOException {
@@ -62,9 +63,10 @@ public class DownloadWorker extends Worker {
     public Result doWork() {
         Map map = getInputData().getKeyValueMap();
     	long startingPos = (long) map.get(Constants.STARTING_POS_DOWNLOAD);
-    	MozillaDownload download = (MozillaDownload) map.get(Constants.MOZILLA_DOWNLOAD);
+    	MozillaDownload download = Util.getDownloadFromJson((String) map.get(Constants.MOZILLA_DOWNLOAD));
     	Context context = (Context) map.get(Constants.CONTEXT);
     	int newStatus = (int) map.get(Constants.DOWNLOAD_STATUS);
+    	Log.d(TAG, String.valueOf(newStatus));
     	try {
             File destinationFile = new File(download.getTargetPath());
             URL url = new URL(download.getUrl());
