@@ -18,7 +18,7 @@ public class MozillaDownload implements Serializable {
 	private double maxSpeed;
 	private int status;
 	private long totalBytes;
-	private long chunkBytes = 128 * 1024 * 1024;
+	private long chunkBytes = 128 * 1024;
 	private long downloadedBytes = 0;
 	private List<OneTimeWorkRequest> workRequestList;
 

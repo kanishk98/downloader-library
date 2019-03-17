@@ -6,4 +6,5 @@ public class Constants {
     public static String DOWNLOAD_STATUS = "DOWNLOAD_STATUS";
     public static String PAUSED_DOWNLOADS = "/paused_downloads/";
     public static String CONTEXT = "CONTEXT";
+    public static String STOP_DOWNLOAD = "STOP_DOWNLOAD";
 }
