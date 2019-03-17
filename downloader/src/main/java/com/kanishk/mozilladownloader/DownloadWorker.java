@@ -29,7 +29,8 @@ public class DownloadWorker extends Worker {
 
 
     private void download(MozillaDownload download, FileChannel downloadChannel, ReadableByteChannel readableByteChannel, long channelPosition, long totalBytes) throws IOException {
-    	long bytesDownloaded = downloadChannel.transferFrom(readableByteChannel, channelPosition, totalBytes);
+    	Log.d(TAG, "Downloading " + download.getUrl());
+        long bytesDownloaded = downloadChannel.transferFrom(readableByteChannel, channelPosition, totalBytes);
         download.setDownloadedBytes(bytesDownloaded);
     }
 

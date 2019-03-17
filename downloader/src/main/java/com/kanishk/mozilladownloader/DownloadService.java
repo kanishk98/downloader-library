@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,7 +21,11 @@ public class DownloadService extends Service {
 
     private final String TAG = getClass().getSimpleName();
 
+    public DownloadService() {
+    }
+
     private void download(MozillaDownload download) {
+        Log.d(TAG, "Downloading " + download.getUrl());
         // since execution time limit is 10 minutes, chain into granular downloads
         List<OneTimeWorkRequest> requests = new ArrayList<>();
         long chunks = (long) Math.ceil(download.getTotalBytes() / download.getChunkBytes());
@@ -76,6 +81,7 @@ public class DownloadService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // TODO: Investigate possible protocols that user may direct to
         // Current implementation supports FTP and HTTP only
+        Log.d(TAG, "Alarm invoked, running service");
         Context context = (Context) intent.getSerializableExtra(Constants.CONTEXT);
         MozillaDownload download = (MozillaDownload) intent.getSerializableExtra(getString(R.string.mozilla_download));
         download.setTotalBytes(Util.findTotalBytes(download.getUrl()));

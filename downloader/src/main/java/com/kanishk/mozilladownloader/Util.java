@@ -43,6 +43,7 @@ public class Util {
             try {
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("HEAD");
+                Log.d("Util", String.valueOf(connection.getContentLength()));
                 return connection.getContentLength();
             } catch (java.io.IOException e) {
                 Log.e("Util", e.getStackTrace().toString());

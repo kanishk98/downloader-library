@@ -4,43 +4,37 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.util.Log;
 
-import java.io.IOException;
-import java.util.Comparator;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.PriorityQueue;
 
 public class MozillaDownloader {
-    
-    private static final MozillaDownloader downloader = new MozillaDownloader();
+
     private Context context;
     private DownloadStatusListener downloadStatusListener;
     private AlarmManager alarmManager;
+    private final String TAG = getClass().getSimpleName();
     
-    private MozillaDownloader() {
+    private MozillaDownloader(Context context) {
         // private constructor to prevent external instantiation
+        this.context = context;
+        this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
     private void setupDownloadStatusListener(DownloadStatusListener downloadStatusListener) {
         this.downloadStatusListener = downloadStatusListener;
     }
 
-    // TODO: What if app accidentally calls initDownloader() with a different context?
-    public void initDownloader(Context context) throws IOException {
-        // must call initDownloader() before using any other function from this class
-        this.context = context;
-        alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    }
-
     public void scheduleDownload(MozillaDownload download) {
         download.setStatus(DownloadStatus.SCHEDULED);
-        downloadStatusListener.onStatusChange(download);
-        Intent downloadIntent = new Intent();
+        // downloadStatusListener.onStatusChange(download);
+        Intent downloadIntent = new Intent(context, DownloadService.class);
         downloadIntent.putExtra("MozillaDownload", download);
         // TODO: CHANGE IDENTIFIER OF PENDING INTENT TO UNIQUE INTEGER ID
-        PendingIntent pendingIntent = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, download.getScheduledTime().getTime(), pendingIntent);
+        PendingIntent pendingIntent = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, 0);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME, 0, pendingIntent);
     }
 
     public void pauseDownload(MozillaDownload download) {
@@ -75,12 +69,6 @@ public class MozillaDownloader {
     }
 
     public static MozillaDownloader getDownloader(Context context) {
-        try {
-            new MozillaDownloader().initDownloader(context);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-        return downloader;
+        return new MozillaDownloader(context);
     }
 }

@@ -22,6 +22,9 @@ public class MozillaDownload implements Serializable {
 	private long downloadedBytes = 0;
 	private List<OneTimeWorkRequest> workRequestList;
 
+	public MozillaDownload() {
+	}
+
 	public String getUid() {
 		return uid;
 	}
