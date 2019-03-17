@@ -3,6 +3,8 @@ package com.kanishk.mozilladownloader;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -55,5 +57,11 @@ public class Util {
         }
         // non-HTTP download, implement infinite progress bar
         return Long.MAX_VALUE;
+    }
+    public static String jsonifyDownload(MozillaDownload download) {
+        return new Gson().toJson(download);
+    }
+    public static MozillaDownload getDownloadFromJson(String downloadJson) {
+        return new Gson().fromJson(downloadJson, MozillaDownload.class);
     }
 }
