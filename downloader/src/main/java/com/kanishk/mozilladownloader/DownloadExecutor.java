@@ -24,6 +24,7 @@ import java.nio.channels.ReadableByteChannel;
 public class DownloadExecutor extends IntentService {
 
     private final String TAG = getClass().getSimpleName();
+    private MozillaDownload currentDownload = null;
     private volatile boolean pause = false;
     private volatile boolean cancel = false;
     private IntentFilter intentFilter = new IntentFilter(Constants.STOP_DOWNLOAD);
@@ -107,6 +108,7 @@ public class DownloadExecutor extends IntentService {
 
     @Override
     public void onDestroy() {
+        pause(currentDownload);
         unregisterReceiver(stopDownloadReceiver);
         super.onDestroy();
     }
@@ -115,6 +117,7 @@ public class DownloadExecutor extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         registerReceiver(stopDownloadReceiver, intentFilter);
         MozillaDownload download = (MozillaDownload) intent.getSerializableExtra(Constants.MOZILLA_DOWNLOAD);
+        currentDownload = download;
         try {
             download(download);
         } catch (InterruptedException e) {
