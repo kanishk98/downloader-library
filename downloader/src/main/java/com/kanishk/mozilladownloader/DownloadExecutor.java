@@ -33,6 +33,7 @@ public class DownloadExecutor extends IntentService {
                 pause = true;
                 pause(download);
             } else if (download.getStatus() == DownloadStatus.CANCELLING) {
+                Log.d(TAG, "Cancel broadcast received");
                 cancel = true;
                 cancel(download);
             }
@@ -69,9 +70,14 @@ public class DownloadExecutor extends IntentService {
     }
 
     private void pause(MozillaDownload download) {
+        // TODO: Add logic for saving download state
     }
 
     private void cancel(MozillaDownload download) {
+        // TODO: Use database of download objects to handle filename retrieval
+        File tempFile = new File((getApplicationContext().getExternalFilesDir("sublime/") + download.getUid() +
+                download.getUrl().substring(download.getUrl().lastIndexOf("."))));
+        tempFile.delete();
     }
 
     public DownloadExecutor(String name) {

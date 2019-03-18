@@ -48,15 +48,12 @@ public class MozillaDownloader {
 
     public void cancelDownload(MozillaDownload download) {
         // intents cannot be distinguished based on their extras
-        if (download.getStatus() == DownloadStatus.RUNNING) {
-            download.setStatus(DownloadStatus.CANCELLING);
-            Intent cancelIntent = new Intent();
-            cancelIntent.putExtra("MozillaDownload", download);
-            context.startService(cancelIntent);
-        } else {
-            alarmManager.cancel(PendingIntent.getService(context, download.getUid().hashCode(),
-                    new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
-        }
+        download.setStatus(DownloadStatus.CANCELLING);
+        Intent cancelIntent = new Intent(context, DownloadService.class);
+        cancelIntent.putExtra("MozillaDownload", download);
+        context.startService(cancelIntent);
+        alarmManager.cancel(PendingIntent.getService(context, download.getUid().hashCode(),
+                new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     public void rescheduleDownload(MozillaDownload download, Date newTime) {

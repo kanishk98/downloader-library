@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button pauseButton = findViewById(R.id.pause_download);
+        Button cancelButton = findViewById(R.id.cancel_download);
         final MozillaDownloader mozillaDownloader = MozillaDownloader.getDownloader(getApplicationContext());
         if (mozillaDownloader != null) {
             download = new MozillaDownload();
@@ -31,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mozillaDownloader != null) {
                     mozillaDownloader.pauseDownload(download);
+                }
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mozillaDownloader != null) {
+                    mozillaDownloader.cancelDownload(download);
                 }
             }
         });
