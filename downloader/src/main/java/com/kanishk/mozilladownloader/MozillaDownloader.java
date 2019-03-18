@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.concurrent.ScheduledExecutorService;
@@ -35,6 +37,7 @@ public class MozillaDownloader {
         downloadIntent.putExtra("MozillaDownload", download);
         // TODO: CHANGE IDENTIFIER OF PENDING INTENT TO UNIQUE INTEGER ID
         PendingIntent pendingIntent = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, 0);
+        // TODO: CHANGE triggerAtMillis back to scheduledTime in production
         alarmManager.set(AlarmManager.ELAPSED_REALTIME, 0, pendingIntent);
     }
 
@@ -56,16 +59,15 @@ public class MozillaDownloader {
                 new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
-    public void rescheduleDownload(MozillaDownload download, Date newTime) {
-        // download.getScheduledTime() != newTime
-        if (download.getStatus() == DownloadStatus.RUNNING) {
-            pauseDownload(download);
-        }
-        download.setScheduledTime(newTime);
-        scheduleDownload(download);
-    }
-
     public static MozillaDownloader getDownloader(Context context) {
         return new MozillaDownloader(context);
+    }
+
+    public void resumeDownload(String pausedDownloadJson) {
+        MozillaDownload download = new Gson().fromJson(pausedDownloadJson, MozillaDownload.class);
+        // paused download will have scheduled time before current time
+        // AlarmManager will trigger alarm automatically
+        Log.d(TAG, "DOWNLOADED BYTES ARE: " + download.getDownloadedBytes());
+        scheduleDownload(download);
     }
 }

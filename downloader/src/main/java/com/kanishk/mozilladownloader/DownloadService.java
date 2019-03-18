@@ -35,7 +35,7 @@ public class DownloadService extends IntentService {
         Log.d(TAG, "Alarm invoked, running service");
         Context context = (Context) intent.getSerializableExtra(Constants.CONTEXT);
         MozillaDownload download = (MozillaDownload) intent.getSerializableExtra(getString(R.string.mozilla_download));
-        Log.d(TAG, "Downloading status: " + String.valueOf(download.getStatus()));
+        Log.d(TAG, "Downloaded bytes " + download.getDownloadedBytes());
         if (download.getStatus() == DownloadStatus.SCHEDULED) {
             download(download);
         } else if (download.getStatus() == DownloadStatus.CANCELLING || download.getStatus() == DownloadStatus.PAUSING) {
