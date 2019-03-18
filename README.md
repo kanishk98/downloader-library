@@ -24,32 +24,40 @@ import java.nio.channels.ReadableByteChannel;
 public class DownloadTest {
 	public static void main(String[] args) throws InterruptedException {
 		try {
-            File destinationFile = new File("./google.html");
-            URL url = new URL("https://www.google.com");
-            ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
-            FileChannel downloadChannel = new FileOutputStream(destinationFile, destinationFile.exists()).getChannel();
-            long initialBytes;
-            long downloadedBytes = 0;
-            int i = 0;
-            do {
-                initialBytes = downloadedBytes;
-                long chunkBytes = downloadChannel.transferFrom(readableByteChannel, downloadedBytes, 64 * 1024);
-                downloadedBytes += chunkBytes;
-                ++i;
-                System.out.println("Downloaded " + downloadedBytes + " bytes");
-            } while(downloadedBytes > initialBytes && i < 2);
-            System.out.println("DOWNLOAD PAUSED");
-            Thread.sleep(3000);
-            System.out.println("RESUMING DOWNLOAD");
-            do {
-                initialBytes = downloadedBytes;
-                long chunkBytes = downloadChannel.transferFrom(readableByteChannel, downloadedBytes, 64 * 1024);
-                downloadedBytes += chunkBytes;
-                System.out.println("Downloaded " + downloadedBytes + " bytes, initial bytes = " + initialBytes);
-            } while(downloadedBytes > initialBytes);
-        } catch (java.io.IOException e) {
-        	e.printStackTrace();
-        }
+		    File destinationFile = new File("./google.html");
+		    URL url = new URL("https://www.google.com");
+		    ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream());
+		    FileChannel downloadChannel = new FileOutputStream(destinationFile, destinationFile.exists()).getChannel();
+		    long initialBytes;
+		    long downloadedBytes = 0;
+		    int i = 0;
+		    do {
+			initialBytes = downloadedBytes;
+			long chunkBytes = downloadChannel.transferFrom(readableByteChannel, downloadedBytes, 64 * 1024);
+			downloadedBytes += chunkBytes;
+			++i;
+			System.out.println("Downloaded " + downloadedBytes + " bytes");
+		    } while(downloadedBytes > initialBytes && i < 2);
+		    System.out.println("DOWNLOAD PAUSED");
+		    Thread.sleep(3000);
+		    System.out.println("RESUMING DOWNLOAD");
+		    do {
+			initialBytes = downloadedBytes;
+			long chunkBytes = downloadChannel.transferFrom(readableByteChannel, downloadedBytes, 64 * 1024);
+			downloadedBytes += chunkBytes;
+			System.out.println("Downloaded " + downloadedBytes + " bytes, initial bytes = " + initialBytes);
+		    } while(downloadedBytes > initialBytes);
+		} catch (java.io.IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
 ```
+
+## Running app
+
+Currently, the app downloads a publicly available PDF from a hard-coded URL in `MainActivity.java`. As soon as you open the app, the download begins (the `AlarmManager` has been instructed to run immediately in debug mode for easier testing). 
+You may pause the download, cancel it, and resume the last paused download. 
+
+The status of each paused download is saved on the device. My guess is that resuming _specific_ paused downloads as long as the functionality is fine and tested for one is just a UI problem. Working on that. 
+
