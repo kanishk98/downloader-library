@@ -16,16 +16,16 @@ public class DownloadService extends IntentService {
         super("DownloadService");
     }
 
-    private void download(MozillaDownload download, Context context) {
+    private void download(MozillaDownload download) {
         Intent intent = new Intent(getApplicationContext(), DownloadExecutor.class);
         intent.putExtra(Constants.MOZILLA_DOWNLOAD, download);
         getApplicationContext().startService(intent);
     }
 
-    private void stopDownload(MozillaDownload download, Context context) {
+    private void stopDownload(MozillaDownload download) {
         Intent intent = new Intent(Constants.STOP_DOWNLOAD);
         intent.putExtra(Constants.MOZILLA_DOWNLOAD, download);
-        context.sendBroadcast(intent);
+        getApplicationContext().sendBroadcast(intent);
     }
 
     @Override
@@ -35,10 +35,11 @@ public class DownloadService extends IntentService {
         Log.d(TAG, "Alarm invoked, running service");
         Context context = (Context) intent.getSerializableExtra(Constants.CONTEXT);
         MozillaDownload download = (MozillaDownload) intent.getSerializableExtra(getString(R.string.mozilla_download));
+        Log.d(TAG, "Downloading status: " + String.valueOf(download.getStatus()));
         if (download.getStatus() == DownloadStatus.SCHEDULED) {
-            download(download, context);
+            download(download);
         } else if (download.getStatus() == DownloadStatus.CANCELLING || download.getStatus() == DownloadStatus.PAUSING) {
-            stopDownload(download, context);
+            stopDownload(download);
         }
     }
 }

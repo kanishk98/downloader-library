@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class MozillaDownloader {
 
@@ -27,7 +28,7 @@ public class MozillaDownloader {
         this.downloadStatusListener = downloadStatusListener;
     }
 
-    public void scheduleDownload(MozillaDownload download) {
+    public void scheduleDownload(final MozillaDownload download) {
         download.setStatus(DownloadStatus.SCHEDULED);
         // downloadStatusListener.onStatusChange(download);
         Intent downloadIntent = new Intent(context, DownloadService.class);
@@ -38,12 +39,11 @@ public class MozillaDownloader {
     }
 
     public void pauseDownload(MozillaDownload download) {
-        if (download.getStatus() == DownloadStatus.RUNNING) {
-            download.setStatus(DownloadStatus.PAUSING);
-            Intent pauseIntent = new Intent();
-            pauseIntent.putExtra("MozillaDownload", download);
-            context.startService(pauseIntent);
-        }
+        Log.d(TAG, "Pausing download");
+        download.setStatus(DownloadStatus.PAUSING);
+        Intent pauseIntent = new Intent(context, DownloadService.class);
+        pauseIntent.putExtra("MozillaDownload", download);
+        context.startService(pauseIntent);
     }
 
     public void cancelDownload(MozillaDownload download) {

@@ -20,6 +20,7 @@ import java.nio.channels.ReadableByteChannel;
 public class DownloadExecutor extends IntentService {
 
     private final String TAG = getClass().getSimpleName();
+    // TODO: Find if pause and cancel should be volatile
     private boolean pause = false;
     private boolean cancel = false;
     private IntentFilter intentFilter = new IntentFilter(Constants.STOP_DOWNLOAD);
@@ -29,8 +30,11 @@ public class DownloadExecutor extends IntentService {
         public void onReceive(Context context, Intent intent) {
             MozillaDownload download = (MozillaDownload) intent.getSerializableExtra(Constants.MOZILLA_DOWNLOAD);
             if (download.getStatus() == DownloadStatus.PAUSING) {
+                Log.d(TAG, "Pause broadcast received");
+                pause = true;
                 pause(download);
             } else if (download.getStatus() == DownloadStatus.CANCELLING) {
+                cancel = true;
                 cancel(download);
             }
         }
@@ -42,7 +46,7 @@ public class DownloadExecutor extends IntentService {
 
     private void download(MozillaDownload download) {
         try {
-            download.setTargetPath(getApplicationContext().getExternalFilesDir("mozilla/") + download.getUid() +
+            download.setTargetPath(getApplicationContext().getExternalFilesDir("sublime/") + download.getUid() +
             download.getUrl().substring(download.getUrl().lastIndexOf(".")));
             File destinationFile = new File(download.getTargetPath());
             URL url = new URL(download.getUrl());
@@ -58,7 +62,7 @@ public class DownloadExecutor extends IntentService {
                 long chunkBytes = downloadChannel.transferFrom(readableByteChannel, downloadedBytes, download.getChunkBytes());
                 downloadedBytes += chunkBytes;
                 Log.d(TAG, "Downloaded " + downloadedBytes + " bytes");
-            } while(downloadedBytes > initialBytes);
+            } while(downloadedBytes > initialBytes && !pause && !cancel);
             Log.d(TAG, "Download over at " + downloadedBytes);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());

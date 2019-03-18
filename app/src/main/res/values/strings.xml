@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MozillaDownloader</string>
+    <string name="pause_download">Pause download</string>
 </resources>
