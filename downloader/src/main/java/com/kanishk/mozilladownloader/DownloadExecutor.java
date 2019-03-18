@@ -20,9 +20,8 @@ import java.nio.channels.ReadableByteChannel;
 public class DownloadExecutor extends IntentService {
 
     private final String TAG = getClass().getSimpleName();
-    // TODO: Find if pause and cancel should be volatile
-    private boolean pause = false;
-    private boolean cancel = false;
+    private volatile boolean pause = false;
+    private volatile boolean cancel = false;
     private IntentFilter intentFilter = new IntentFilter(Constants.STOP_DOWNLOAD);
     private BroadcastReceiver stopDownloadReceiver = new BroadcastReceiver() {
 
