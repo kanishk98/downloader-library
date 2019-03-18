@@ -5,8 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,14 +34,14 @@ public class DownloadExecutor extends IntentService {
             if (download.getStatus() == DownloadStatus.PAUSING) {
                 Log.d(TAG, "Pause broadcast received");
                 pause = true;
-                pause(download);
             } else if (download.getStatus() == DownloadStatus.CANCELLING) {
                 Log.d(TAG, "Cancel broadcast received");
                 cancel = true;
-                cancel(download);
             }
         }
     };
+    SharedPreferences sharedPreferences = getSharedPreferences(Constants.SAVED_DOWNLOADS, Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = sharedPreferences.edit();
 
     public DownloadExecutor() {
         super("DownloadExecutor");
@@ -63,6 +66,12 @@ public class DownloadExecutor extends IntentService {
                 downloadedBytes += chunkBytes;
                 Log.d(TAG, "Downloaded " + downloadedBytes + " bytes");
             } while(downloadedBytes > initialBytes && !pause && !cancel);
+            if (pause) {
+                pause(download);
+            }
+            if (cancel) {
+                cancel(download);
+            }
             Log.d(TAG, "Download over at " + downloadedBytes);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
@@ -70,13 +79,14 @@ public class DownloadExecutor extends IntentService {
     }
 
     private void pause(MozillaDownload download) {
-        // TODO: Add logic for saving download state
+        download.setStatus(DownloadStatus.PAUSED);
+        editor.putString(String.valueOf(download.getUid()), new Gson().toJson(download)).commit();
     }
 
     private void cancel(MozillaDownload download) {
-        // TODO: Use database of download objects to handle filename retrieval
-        File tempFile = new File((getApplicationContext().getExternalFilesDir("sublime/") + download.getUid() +
-                download.getUrl().substring(download.getUrl().lastIndexOf("."))));
+        // if previously resumed download is being cancelled
+        editor.remove(String.valueOf(download.getUid()));
+        File tempFile = new File(download.getTargetPath());
         tempFile.delete();
     }
 
