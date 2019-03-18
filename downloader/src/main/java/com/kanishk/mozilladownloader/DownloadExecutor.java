@@ -34,10 +34,8 @@ public class DownloadExecutor extends IntentService {
         public void onReceive(Context context, Intent intent) {
             MozillaDownload download = (MozillaDownload) intent.getSerializableExtra(Constants.MOZILLA_DOWNLOAD);
             if (download.getStatus() == DownloadStatus.PAUSING) {
-                Log.d(TAG, "Pause broadcast received");
                 pause = true;
             } else if (download.getStatus() == DownloadStatus.CANCELLING) {
-                Log.d(TAG, "Cancel broadcast received");
                 cancel = true;
             }
         }
@@ -49,7 +47,7 @@ public class DownloadExecutor extends IntentService {
         super("DownloadExecutor");
     }
 
-    private void download(MozillaDownload download) throws InterruptedException {
+    private void download(MozillaDownload download) {
         try {
             download.setTargetPath(getApplicationContext().getExternalFilesDir("/mozilla/") + download.getUid() +
             download.getUrl().substring(download.getUrl().lastIndexOf(".")));
@@ -64,23 +62,18 @@ public class DownloadExecutor extends IntentService {
             download.setStatus(DownloadStatus.RUNNING);
             long initialBytes;
             long downloadedBytes = destinationFile.length();
-            Log.d("File length: ", String.valueOf(downloadedBytes));
-            Log.d("Downloaded bytes", String.valueOf(download.getDownloadedBytes()));
             do {
                 initialBytes = downloadedBytes;
                 long chunkBytes = downloadChannel.transferFrom(readableByteChannel, downloadedBytes, download.getChunkBytes());
                 downloadedBytes += chunkBytes;
                 download.setDownloadedBytes(downloadedBytes);
-                Log.d(TAG, "Downloaded " + downloadedBytes + " bytes");
             } while(downloadedBytes > initialBytes && !pause && !cancel);
             if (pause) {
-                Log.d(TAG, "PAUSING DOWNLOAD, THREAD SLEEPING");
                 pause(download);
             }
             if (cancel) {
                 cancel(download);
             }
-            Log.d(TAG, "Download over at " + downloadedBytes);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
         }
@@ -118,10 +111,6 @@ public class DownloadExecutor extends IntentService {
         registerReceiver(stopDownloadReceiver, intentFilter);
         MozillaDownload download = (MozillaDownload) intent.getSerializableExtra(Constants.MOZILLA_DOWNLOAD);
         currentDownload = download;
-        try {
-            download(download);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        download(download);
     }
 }
