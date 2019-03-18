@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -14,7 +16,6 @@ import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.channels.Channels;
@@ -48,9 +49,14 @@ public class DownloadExecutor extends IntentService {
     }
 
     private void download(MozillaDownload download) {
+        // TODO: Use NotificationManager constructed by app to display notification here
+        // The builder below is used only for making DownloadExecutor a foreground service
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getBaseContext())
+                .setContentTitle(download.getUrl())
+                .setProgress(0, 0, true);
         try {
             download.setTargetPath(getApplicationContext().getExternalFilesDir("/mozilla/") + download.getUid() +
-            download.getUrl().substring(download.getUrl().lastIndexOf(".")));
+                    download.getUrl().substring(download.getUrl().lastIndexOf(".")));
             File destinationFile = new File(download.getTargetPath());
             URL url = new URL(download.getUrl());
             URLConnection connection = url.openConnection();
@@ -62,6 +68,7 @@ public class DownloadExecutor extends IntentService {
             download.setStatus(DownloadStatus.RUNNING);
             long initialBytes;
             long downloadedBytes = destinationFile.length();
+            startForeground(download.getUid().hashCode(), notificationBuilder.build());
             do {
                 initialBytes = downloadedBytes;
                 long chunkBytes = downloadChannel.transferFrom(readableByteChannel, downloadedBytes, download.getChunkBytes());
