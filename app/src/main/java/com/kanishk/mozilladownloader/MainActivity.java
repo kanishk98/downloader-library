@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,25 +15,36 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private MozillaDownload download;
+    private Button startButton;
+    private Button pauseButton;
+    private Button cancelButton;
+    private Button resumeButton;
     private SharedPreferences sharedPreferences;
+    private final String TAG = getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button pauseButton = findViewById(R.id.pause_download);
-        Button cancelButton = findViewById(R.id.cancel_download);
-        Button resumeButton = findViewById(R.id.resume_download);
+        startButton = findViewById(R.id.start_download);
+        pauseButton = findViewById(R.id.pause_download);
+        cancelButton = findViewById(R.id.cancel_download);
+        resumeButton = findViewById(R.id.resume_download);
         final MozillaDownloader mozillaDownloader = MozillaDownloader.getDownloader(getApplicationContext());
-        if (mozillaDownloader != null) {
-            download = new MozillaDownload();
-            download.setUid(Util.generateUID());
-            download.setUrl("https://media.readthedocs.org/pdf/zulip/1.5.0/zulip.pdf");
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(2019, 3, 17, 20, 41);
-            download.setScheduledTime(calendar.getTime());
-            mozillaDownloader.scheduleDownload(download);
-        }
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mozillaDownloader != null) {
+                    download = new MozillaDownload();
+                    download.setUid(Util.generateUID());
+                    download.setUrl("https://media.readthedocs.org/pdf/zulip/1.5.0/zulip.pdf");
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(2019, 3, 17, 20, 41);
+                    download.setScheduledTime(calendar.getTime());
+                    mozillaDownloader.scheduleDownload(download);        
+                }
+            }
+        });
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
                     while (iterator.hasNext()) {
                         Map.Entry pair = (Map.Entry) iterator.next();
                         String pausedDownloadJson = (String) pair.getValue();
+                        Log.d(TAG, "" + pausedDownloadJson);
                         if (pausedDownloadJson != null) {
                             mozillaDownloader.resumeDownload(pausedDownloadJson);
                             sharedPreferences.edit().remove((String) pair.getKey()).commit();

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MozillaDownloader</string>
-    <string name="pause_download">Pause download</string>
-    <string name="resume_download">Resume download</string>
-    <string name="cancel_download">Cancel download</string>
+    <string name="start_download">Start</string>
+    <string name="pause_download">Pause</string>
+    <string name="resume_download">Resume</string>
+    <string name="cancel_download">Cancel</string>
 </resources>

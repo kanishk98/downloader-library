@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.io.Serializable;
 
 public class DownloadService extends IntentService {
@@ -34,8 +36,8 @@ public class DownloadService extends IntentService {
         // Current implementation supports FTP and HTTP only
         Log.d(TAG, "Alarm invoked, running service");
         Context context = (Context) intent.getSerializableExtra(Constants.CONTEXT);
-        MozillaDownload download = (MozillaDownload) intent.getSerializableExtra(getString(R.string.mozilla_download));
-        Log.d(TAG, "Downloaded bytes " + download.getDownloadedBytes());
+        MozillaDownload download = (MozillaDownload) intent.getSerializableExtra("MozillaDownload");
+        Log.d(TAG, "" + new Gson().toJson(download));
         if (download.getStatus() == DownloadStatus.SCHEDULED) {
             download(download);
         } else if (download.getStatus() == DownloadStatus.CANCELLING || download.getStatus() == DownloadStatus.PAUSING) {
