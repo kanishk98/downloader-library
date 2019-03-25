@@ -55,7 +55,7 @@ public class DownloadExecutor extends IntentService {
                 .setContentTitle(download.getUrl())
                 .setProgress(0, 0, true);
         try {
-            download.setTargetPath(getApplicationContext().getExternalFilesDir("/mozilla/") + download.getUid() +
+            download.setTargetPath(getApplicationContext().getExternalFilesDir("") + download.getUid() +
                     download.getUrl().substring(download.getUrl().lastIndexOf(".")));
             File destinationFile = new File(download.getTargetPath());
             URL url = new URL(download.getUrl());
@@ -74,6 +74,7 @@ public class DownloadExecutor extends IntentService {
                 long chunkBytes = downloadChannel.transferFrom(readableByteChannel, downloadedBytes, download.getChunkBytes());
                 downloadedBytes += chunkBytes;
                 download.setDownloadedBytes(downloadedBytes);
+                Log.d(TAG, "Downloaded " + downloadedBytes + " bytes");
             } while(downloadedBytes > initialBytes && !pause && !cancel);
             if (pause) {
                 pause(download);

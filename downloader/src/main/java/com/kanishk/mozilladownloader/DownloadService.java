@@ -34,7 +34,6 @@ public class DownloadService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         // TODO: Investigate possible protocols that user may direct to
         // Current implementation supports FTP and HTTP only
-        Log.d(TAG, "Alarm invoked, running service");
         Context context = (Context) intent.getSerializableExtra(Constants.CONTEXT);
         MozillaDownload download = (MozillaDownload) intent.getSerializableExtra("MozillaDownload");
         Log.d(TAG, "" + new Gson().toJson(download));
