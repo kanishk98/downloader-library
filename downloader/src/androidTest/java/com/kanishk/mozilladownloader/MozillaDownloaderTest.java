@@ -1,6 +1,10 @@
 package com.kanishk.mozilladownloader;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.support.test.InstrumentationRegistry;
+
+import com.google.gson.Gson;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,5 +41,11 @@ public class MozillaDownloaderTest {
     public void setDownloadAlarm() throws Exception {
         boolean alarmSet = downloader.scheduleDownload(download);
         assertEquals(true, alarmSet);
+    }
+
+    @Test
+    public void cancelAlarm() throws Exception {
+        boolean cancelAlarm = downloader.cancelDownload(download);
+        assertEquals(false, cancelAlarm);
     }
 }

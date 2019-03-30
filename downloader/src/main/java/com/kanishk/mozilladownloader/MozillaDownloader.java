@@ -46,7 +46,7 @@ public class MozillaDownloader {
         context.startService(pauseIntent);
     }
 
-    public void cancelDownload(MozillaDownload download) {
+    public boolean cancelDownload(MozillaDownload download) {
         // intents cannot be distinguished based on their extras
         download.setStatus(DownloadStatus.CANCELLING);
         Intent cancelIntent = new Intent(context, DownloadService.class);
@@ -54,6 +54,8 @@ public class MozillaDownloader {
         context.startService(cancelIntent);
         alarmManager.cancel(PendingIntent.getService(context, download.getUid().hashCode(),
                 new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
+        boolean alarmSet = PendingIntent.getService(context, download.getUid().hashCode(), cancelIntent, PendingIntent.FLAG_NO_CREATE) != null;
+        return alarmSet;
     }
 
     public static MozillaDownloader getDownloader(Context context) {
