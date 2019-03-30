@@ -4,14 +4,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.util.Log;
 
 import com.google.gson.Gson;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.concurrent.ScheduledExecutorService;
 
 public class MozillaDownloader {
 
@@ -30,7 +25,7 @@ public class MozillaDownloader {
         this.downloadStatusListener = downloadStatusListener;
     }
 
-    public void scheduleDownload(final MozillaDownload download) {
+    public boolean scheduleDownload(final MozillaDownload download) {
         download.setStatus(DownloadStatus.SCHEDULED);
         // downloadStatusListener.onStatusChange(download);
         Intent downloadIntent = new Intent(context, DownloadService.class);
@@ -39,6 +34,8 @@ public class MozillaDownloader {
         PendingIntent pendingIntent = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, 0);
         // TODO: CHANGE triggerAtMillis back to scheduledTime in production
         alarmManager.set(AlarmManager.ELAPSED_REALTIME, 0, pendingIntent);
+        boolean alarmSet = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, PendingIntent.FLAG_NO_CREATE) != null;
+        return alarmSet;
     }
 
     public void pauseDownload(MozillaDownload download) {

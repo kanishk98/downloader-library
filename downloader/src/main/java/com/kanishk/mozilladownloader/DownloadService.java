@@ -8,8 +8,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.io.Serializable;
-
 public class DownloadService extends IntentService {
 
     private final String TAG = getClass().getSimpleName();

@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -48,7 +47,7 @@ public class DownloadExecutor extends IntentService {
         super("DownloadExecutor");
     }
 
-    private void download(MozillaDownload download) {
+    public long download(MozillaDownload download) {
         // TODO: Use NotificationManager constructed by app to display notification here
         // The builder below is used only for making DownloadExecutor a foreground service
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getBaseContext())
@@ -82,8 +81,10 @@ public class DownloadExecutor extends IntentService {
             if (cancel) {
                 cancel(download);
             }
+            return downloadedBytes;
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
+            return -1;
         }
     }
 
