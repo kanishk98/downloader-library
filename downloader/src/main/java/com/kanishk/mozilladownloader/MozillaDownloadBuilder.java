@@ -1,5 +1,8 @@
 package com.kanishk.mozilladownloader;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Date;
 
 public class MozillaDownloadBuilder {
@@ -47,8 +50,13 @@ public class MozillaDownloadBuilder {
     }
 
     public MozillaDownload createMozillaDownload() {
-        if (url == null) {
-            throw new NullPointerException("URL cannot be null");
+        try {
+            URL validURL = new URL(url);
+            validURL.toURI();
+        } catch (MalformedURLException e) {
+            throw new NullPointerException("This URL is invalid and is treated as null");
+        } catch (URISyntaxException e) {
+            throw new NullPointerException("This URL is invalid and is treated as null");
         }
         if (scheduledTime == null) {
             throw new NullPointerException("Download cannot be scheduled at null time");
