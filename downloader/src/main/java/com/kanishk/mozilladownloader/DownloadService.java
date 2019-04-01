@@ -16,13 +16,13 @@ public class DownloadService extends IntentService {
         super("DownloadService");
     }
 
-    private void download(MozillaDownload download) {
+    public void download(MozillaDownload download) {
         Intent intent = new Intent(getApplicationContext(), DownloadExecutor.class);
         intent.putExtra(Constants.MOZILLA_DOWNLOAD, download);
         getApplicationContext().startService(intent);
     }
 
-    private void stopDownload(MozillaDownload download) {
+    public void stopDownload(MozillaDownload download) {
         Intent intent = new Intent(Constants.STOP_DOWNLOAD);
         intent.putExtra(Constants.MOZILLA_DOWNLOAD, download);
         getApplicationContext().sendBroadcast(intent);

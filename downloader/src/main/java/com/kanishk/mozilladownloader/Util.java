@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.UUID;
 
 public class Util {
@@ -30,6 +31,15 @@ public class Util {
     }
     public static String generateUID() {
         return UUID.randomUUID().toString();
+    }
+    public static MozillaDownload constructDownload(String url) {
+        MozillaDownload download = new MozillaDownload();
+        download.setUid(Util.generateUID());
+        download.setUrl(url);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2000, 0, 0, 0, 0);
+        download.setScheduledTime(calendar.getTime());
+        return download;
     }
     public static long findTotalBytes(String stringUrl) {
         // TODO: Use Apache NetCommons library for finding size of FTP download

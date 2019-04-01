@@ -21,6 +21,12 @@ public class MozillaDownloader {
         this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
+    public static Intent createIntent(Context context, MozillaDownload download) {
+        Intent intent = new Intent(context, DownloadService.class);
+        intent.putExtra("MozillaDownload", download);
+        return intent;
+    }
+
     private void setupDownloadStatusListener(DownloadStatusListener downloadStatusListener) {
         this.downloadStatusListener = downloadStatusListener;
     }
@@ -28,8 +34,7 @@ public class MozillaDownloader {
     public boolean scheduleDownload(final MozillaDownload download) {
         download.setStatus(DownloadStatus.SCHEDULED);
         // downloadStatusListener.onStatusChange(download);
-        Intent downloadIntent = new Intent(context, DownloadService.class);
-        downloadIntent.putExtra("MozillaDownload", download);
+        Intent downloadIntent = createIntent(context, download);
         // TODO: CHANGE IDENTIFIER OF PENDING INTENT TO UNIQUE INTEGER ID
         PendingIntent pendingIntent = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, 0);
         // TODO: CHANGE triggerAtMillis back to scheduledTime in production
@@ -40,8 +45,7 @@ public class MozillaDownloader {
 
     public void pauseDownload(MozillaDownload download) {
         Log.d(TAG, "Pausing download");
-        download.setStatus(DownloadStatus.PAUSING);
-        Intent pauseIntent = new Intent(context, DownloadService.class);
+        Intent pauseIntent = createIntent(context, download);
         pauseIntent.putExtra("MozillaDownload", download);
         context.startService(pauseIntent);
     }
@@ -49,8 +53,7 @@ public class MozillaDownloader {
     public boolean cancelDownload(MozillaDownload download) {
         // intents cannot be distinguished based on their extras
         download.setStatus(DownloadStatus.CANCELLING);
-        Intent cancelIntent = new Intent(context, DownloadService.class);
-        cancelIntent.putExtra("MozillaDownload", download);
+        Intent cancelIntent = createIntent(context, download);
         context.startService(cancelIntent);
         alarmManager.cancel(PendingIntent.getService(context, download.getUid().hashCode(),
                 new Intent(), PendingIntent.FLAG_UPDATE_CURRENT));
