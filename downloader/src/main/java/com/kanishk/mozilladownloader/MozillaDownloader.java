@@ -21,6 +21,14 @@ public class MozillaDownloader {
         this.alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
     }
 
+    public Context getContext() {
+        return context;
+    }
+
+    public AlarmManager getAlarmManager() {
+        return alarmManager;
+    }
+
     public static Intent createIntent(Context context, MozillaDownload download) {
         Intent intent = new Intent(context, DownloadService.class);
         intent.putExtra("MozillaDownload", download);

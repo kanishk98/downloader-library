@@ -33,7 +33,7 @@ public class Util {
         return UUID.randomUUID().toString();
     }
     public static MozillaDownload constructDownload(String url) {
-        MozillaDownload download = new MozillaDownload();
+        MozillaDownload download = new MozillaDownloadBuilder().createMozillaDownload();
         download.setUid(Util.generateUID());
         download.setUrl(url);
         Calendar calendar = Calendar.getInstance();
