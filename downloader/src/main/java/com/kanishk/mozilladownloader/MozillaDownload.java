@@ -33,10 +33,6 @@ public class MozillaDownload implements Serializable {
 		return uid;
 	}
 
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
-
 	public String getUrl() {
 		return url;
 	}

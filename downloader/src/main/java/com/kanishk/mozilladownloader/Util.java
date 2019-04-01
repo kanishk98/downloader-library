@@ -34,7 +34,6 @@ public class Util {
     }
     public static MozillaDownload constructDownload(String url) {
         MozillaDownload download = new MozillaDownloadBuilder().createMozillaDownload();
-        download.setUid(Util.generateUID());
         download.setUrl(url);
         Calendar calendar = Calendar.getInstance();
         calendar.set(2000, 0, 0, 0, 0);

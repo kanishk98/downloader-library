@@ -36,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (mozillaDownloader != null) {
                     download = new MozillaDownloadBuilder().createMozillaDownload();
-                    download.setUid(Util.generateUID());
                     download.setUrl("https://media.readthedocs.org/pdf/zulip/1.5.0/zulip.pdf");
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(2019, 3, 17, 20, 41);
