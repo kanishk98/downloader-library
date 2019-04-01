@@ -51,11 +51,8 @@ public class MozillaDownloadBuilder {
 
     public MozillaDownload createMozillaDownload() {
         try {
-            URL validURL = new URL(url);
-            validURL.toURI();
+            new URL(url);
         } catch (MalformedURLException e) {
-            throw new NullPointerException("This URL is invalid and is treated as null");
-        } catch (URISyntaxException e) {
             throw new NullPointerException("This URL is invalid and is treated as null");
         }
         if (scheduledTime == null) {
