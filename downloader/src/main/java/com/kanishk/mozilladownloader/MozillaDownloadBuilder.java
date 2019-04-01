@@ -47,6 +47,12 @@ public class MozillaDownloadBuilder {
     }
 
     public MozillaDownload createMozillaDownload() {
+        if (url == null) {
+            throw new NullPointerException("URL cannot be null");
+        }
+        if (scheduledTime == null) {
+            throw new NullPointerException("Download cannot be scheduled at null time");
+        }
         return new MozillaDownload(url, targetPath, scheduledTime, timeout, maxSpeed, status, chunkBytes);
     }
 }
