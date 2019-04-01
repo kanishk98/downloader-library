@@ -33,11 +33,9 @@ public class Util {
         return UUID.randomUUID().toString();
     }
     public static MozillaDownload constructDownload(String url) {
-        MozillaDownload download = new MozillaDownloadBuilder().createMozillaDownload();
-        download.setUrl(url);
         Calendar calendar = Calendar.getInstance();
         calendar.set(2000, 0, 0, 0, 0);
-        download.setScheduledTime(calendar.getTime());
+        MozillaDownload download = new MozillaDownloadBuilder().setUrl(url).setScheduledTime(calendar.getTime()).createMozillaDownload();
         return download;
     }
     public static long findTotalBytes(String stringUrl) {
