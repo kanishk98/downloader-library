@@ -52,4 +52,19 @@ public class DownloadServiceTest {
         mockDownloadService.onHandleIntent(downloadIntent);
         Mockito.verify(mockDownloadService).stopDownload(download);
     }
+
+    @Test
+    public void isInvalidDownloadIgnored() {
+        // iterate over all invalid download states and check if method returns quietly
+        for (int i = 0; i < 9; ++i) {
+            if (i == DownloadStatus.SCHEDULED || i == DownloadStatus.PAUSING || i == DownloadStatus.CANCELLING) {
+                continue;
+            }
+            download.setStatus(i);
+            downloadIntent = MozillaDownloader.createIntent(context, download);
+            Mockito.doCallRealMethod().when(mockDownloadService).onHandleIntent(downloadIntent);
+            mockDownloadService.onHandleIntent(downloadIntent);
+            Mockito.verify(mockDownloadService, Mockito.times(0)).stopDownload(download);
+        }
+    }
 }
