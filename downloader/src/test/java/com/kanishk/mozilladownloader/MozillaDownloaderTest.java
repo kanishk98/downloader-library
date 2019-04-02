@@ -44,11 +44,31 @@ public class MozillaDownloaderTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void isURLValid() {
+    public void isURLNull() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(2000, 0, 0);
         MozillaDownloadBuilder builder = new MozillaDownloadBuilder()
                 .setUrl(null)
+                .setScheduledTime(calendar.getTime());
+        download = builder.createMozillaDownload();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void doesURLHaveExtension() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2000, 0, 0);
+        MozillaDownloadBuilder builder = new MozillaDownloadBuilder()
+                .setUrl("https://github")
+                .setScheduledTime(calendar.getTime());
+        download = builder.createMozillaDownload();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void doesURLHaveProtocol() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2000, 0, 0);
+        MozillaDownloadBuilder builder = new MozillaDownloadBuilder()
+                .setUrl("https://github")
                 .setScheduledTime(calendar.getTime());
         download = builder.createMozillaDownload();
     }

@@ -55,6 +55,9 @@ public class MozillaDownloadBuilder {
         } catch (MalformedURLException e) {
             throw new NullPointerException("This URL is invalid and is treated as null");
         }
+        if (url.indexOf(".") == -1) {
+            throw new NullPointerException("This URL is invalid and is treated as null");
+        }
         if (scheduledTime == null) {
             throw new NullPointerException("Download cannot be scheduled at null time");
         }
