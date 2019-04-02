@@ -47,41 +47,40 @@ public class DownloadExecutor extends IntentService {
         super("DownloadExecutor");
     }
 
-    public long download(MozillaDownload download) {
-        // TODO: Use NotificationManager constructed by app to display notification here
-        // The builder below is used only for making DownloadExecutor a foreground service
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getBaseContext())
-                .setContentTitle(download.getUrl())
-                .setProgress(0, 0, true);
+    public long getChunks(long downloadedBytes, File destinationFile, MozillaDownload download) throws IOException {
+        URL url = new URL(download.getUrl());
+        URLConnection connection = url.openConnection();
+        if (destinationFile.exists()) {
+            connection.setRequestProperty("Range", "bytes=" + destinationFile.length() + "-");
+        }
+        ReadableByteChannel readableByteChannel = Channels.newChannel(connection.getInputStream());
+        FileChannel downloadChannel = new FileOutputStream(destinationFile, destinationFile.exists()).getChannel();
+        long initialBytes;
+        download.setStatus(DownloadStatus.RUNNING);
+        do {
+            initialBytes = downloadedBytes;
+            long chunkBytes = downloadChannel.transferFrom(readableByteChannel, downloadedBytes, download.getChunkBytes());
+            downloadedBytes += chunkBytes;
+            download.setDownloadedBytes(downloadedBytes);
+            Log.d(TAG, "Downloaded " + downloadedBytes + " bytes");
+        } while(downloadedBytes > initialBytes && !pause && !cancel);
+        if (pause) {
+            pause(download);
+        }
+        if (cancel) {
+            cancel(download);
+        }
+        download.setStatus(DownloadStatus.COMPLETED);
+        return downloadedBytes;
+    }
+
+    public long download(MozillaDownload download, Context context) {
         try {
-            download.setTargetPath(getApplicationContext().getExternalFilesDir("") + download.getUid() +
+            download.setTargetPath(context.getExternalFilesDir("") + download.getUid() +
                     download.getUrl().substring(download.getUrl().lastIndexOf(".")));
             File destinationFile = new File(download.getTargetPath());
-            URL url = new URL(download.getUrl());
-            URLConnection connection = url.openConnection();
-            if (destinationFile.exists()) {
-                connection.setRequestProperty("Range", "bytes=" + destinationFile.length() + "-");
-            }
-            ReadableByteChannel readableByteChannel = Channels.newChannel(connection.getInputStream());
-            FileChannel downloadChannel = new FileOutputStream(destinationFile, destinationFile.exists()).getChannel();
-            download.setStatus(DownloadStatus.RUNNING);
-            long initialBytes;
             long downloadedBytes = destinationFile.length();
-            startForeground(download.getUid().hashCode(), notificationBuilder.build());
-            do {
-                initialBytes = downloadedBytes;
-                long chunkBytes = downloadChannel.transferFrom(readableByteChannel, downloadedBytes, download.getChunkBytes());
-                downloadedBytes += chunkBytes;
-                download.setDownloadedBytes(downloadedBytes);
-                Log.d(TAG, "Downloaded " + downloadedBytes + " bytes");
-            } while(downloadedBytes > initialBytes && !pause && !cancel);
-            if (pause) {
-                pause(download);
-            }
-            if (cancel) {
-                cancel(download);
-            }
-            return downloadedBytes;
+            return getChunks(downloadedBytes, destinationFile, download);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
             return -1;
@@ -120,6 +119,12 @@ public class DownloadExecutor extends IntentService {
         registerReceiver(stopDownloadReceiver, intentFilter);
         MozillaDownload download = (MozillaDownload) intent.getSerializableExtra(Constants.MOZILLA_DOWNLOAD);
         currentDownload = download;
-        download(download);
+        // TODO: Use NotificationManager constructed by app to display notification here
+        // The builder below is used only for making DownloadExecutor a foreground service
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getBaseContext())
+                .setContentTitle(download.getUrl())
+                .setProgress(0, 0, true);
+        startForeground(download.getUid().hashCode(), notificationBuilder.build());
+        download(download, getApplicationContext());
     }
 }
