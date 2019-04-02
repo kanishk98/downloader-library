@@ -34,7 +34,6 @@ public class DownloadService extends IntentService {
         // Current implementation supports FTP and HTTP only
         Context context = (Context) intent.getSerializableExtra(Constants.CONTEXT);
         MozillaDownload download = (MozillaDownload) intent.getSerializableExtra("MozillaDownload");
-        Log.d(TAG, "" + new Gson().toJson(download));
         if (download.getStatus() == DownloadStatus.SCHEDULED) {
             download(download);
         } else if (download.getStatus() == DownloadStatus.CANCELLING || download.getStatus() == DownloadStatus.PAUSING) {

@@ -54,7 +54,6 @@ public class MozillaDownloader {
     public void pauseDownload(MozillaDownload download) {
         Log.d(TAG, "Pausing download");
         Intent pauseIntent = createIntent(context, download);
-        pauseIntent.putExtra("MozillaDownload", download);
         context.startService(pauseIntent);
     }
 

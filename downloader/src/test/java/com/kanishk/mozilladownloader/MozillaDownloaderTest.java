@@ -16,8 +16,6 @@ public class MozillaDownloaderTest {
     private MozillaDownload download;
     private Context context;
 
-    private final String TAG = getClass().getSimpleName();
-
     @Before
     public void setup() {
         context = Mockito.mock(Context.class);
