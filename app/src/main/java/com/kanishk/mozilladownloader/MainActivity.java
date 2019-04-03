@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (mozillaDownloader != null) {
-                    download = new MozillaDownloadBuilder().setUrl(Constants.PDF_20MB).createMozillaDownload();
+                    download = new MozillaDownloadBuilder().setUrl(Constants.PDF_358KB).createMozillaDownload();
                     mozillaDownloader.scheduleDownload(download);
                 }
             }

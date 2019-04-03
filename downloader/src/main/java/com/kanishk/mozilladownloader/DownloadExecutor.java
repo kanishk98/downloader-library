@@ -82,7 +82,8 @@ public class DownloadExecutor extends IntentService {
                     download.getUrl().substring(download.getUrl().lastIndexOf(".")));
             File destinationFile = new File(download.getTargetPath());
             long downloadedBytes = destinationFile.length();
-            return getChunks(download.getDownloadedBytes(), destinationFile, download);
+            Log.d(TAG, "File length is: " + downloadedBytes);
+            return getChunks(downloadedBytes, destinationFile, download);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
             return -1;
