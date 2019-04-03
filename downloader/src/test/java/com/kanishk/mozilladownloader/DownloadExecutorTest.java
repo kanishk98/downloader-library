@@ -34,4 +34,6 @@ public class DownloadExecutorTest {
         executor.download(download, context);
         Mockito.verify(executor).getChunks(download.getDownloadedBytes(), destinationFile, download);
     }
+
+    // TODO: Add test to check if pause and cancel flags call relevant methods when download is running
 }

@@ -38,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
                     download = new MozillaDownloadBuilder().createMozillaDownload();
                     download.setUrl("https://media.readthedocs.org/pdf/zulip/1.5.0/zulip.pdf");
                     Calendar calendar = Calendar.getInstance();
-                    calendar.set(2019, 3, 17, 20, 41);
                     download.setScheduledTime(calendar.getTime());
                     mozillaDownloader.scheduleDownload(download);        
                 }

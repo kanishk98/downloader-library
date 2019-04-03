@@ -35,7 +35,6 @@ public class MozillaDownloaderTest {
     @Test
     public void isDownloadNull() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2000, 0, 0);
         MozillaDownloadBuilder builder = new MozillaDownloadBuilder()
                 .setUrl("https://www.github.com")
                 .setScheduledTime(calendar.getTime());
@@ -46,7 +45,6 @@ public class MozillaDownloaderTest {
     @Test(expected = NullPointerException.class)
     public void isURLNull() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2000, 0, 0);
         MozillaDownloadBuilder builder = new MozillaDownloadBuilder()
                 .setUrl(null)
                 .setScheduledTime(calendar.getTime());
@@ -56,25 +54,24 @@ public class MozillaDownloaderTest {
     @Test(expected = NullPointerException.class)
     public void doesURLHaveExtension() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2000, 0, 0);
         MozillaDownloadBuilder builder = new MozillaDownloadBuilder()
                 .setUrl("https://github")
                 .setScheduledTime(calendar.getTime());
         download = builder.createMozillaDownload();
     }
 
-    @Test(expected = NullPointerException.class)
+    @Test
     public void isDateNull() {
         MozillaDownloadBuilder builder = new MozillaDownloadBuilder()
                 .setUrl("https://www.github.com")
                 .setScheduledTime(null);
         download = builder.createMozillaDownload();
+        assertNotNull(download.getScheduledTime());
     }
 
     @Test
     public void isCreatedIntentValid() {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(2000, 0, 0);
         MozillaDownloadBuilder builder = new MozillaDownloadBuilder()
                 .setUrl("https://www.github.com")
                 .setScheduledTime(calendar.getTime());

@@ -103,10 +103,6 @@ public class DownloadExecutor extends IntentService {
         tempFile.delete();
     }
 
-    public DownloadExecutor(String name) {
-        super(name);
-    }
-
     @Override
     public void onDestroy() {
         pause(currentDownload);
