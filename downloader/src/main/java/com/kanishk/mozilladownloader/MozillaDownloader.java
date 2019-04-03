@@ -40,8 +40,7 @@ public class MozillaDownloader {
         Intent downloadIntent = createIntent(context, download);
         // TODO: CHANGE IDENTIFIER OF PENDING INTENT TO UNIQUE INTEGER ID
         PendingIntent pendingIntent = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, 0);
-        // TODO: CHANGE triggerAtMillis back to scheduledTime in production
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME, 0, pendingIntent);
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME, download.getScheduledTime().getTime(), pendingIntent);
         boolean alarmSet = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, PendingIntent.FLAG_NO_CREATE) != null;
         return alarmSet;
     }
