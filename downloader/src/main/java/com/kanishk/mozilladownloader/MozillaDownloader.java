@@ -11,7 +11,6 @@ import com.google.gson.Gson;
 public class MozillaDownloader {
 
     private Context context;
-    private DownloadStatusListener downloadStatusListener;
     private AlarmManager alarmManager;
     private final String TAG = getClass().getSimpleName();
     
@@ -33,10 +32,6 @@ public class MozillaDownloader {
         Intent intent = new Intent(context, DownloadService.class);
         intent.putExtra("MozillaDownload", download);
         return intent;
-    }
-
-    private void setupDownloadStatusListener(DownloadStatusListener downloadStatusListener) {
-        this.downloadStatusListener = downloadStatusListener;
     }
 
     public boolean scheduleDownload(final MozillaDownload download) {
