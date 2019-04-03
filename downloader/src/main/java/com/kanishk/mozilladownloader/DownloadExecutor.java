@@ -66,9 +66,11 @@ public class DownloadExecutor extends IntentService {
         } while(downloadedBytes > initialBytes && !pause && !cancel);
         if (pause) {
             pause(download);
+            return downloadedBytes;
         }
         if (cancel) {
             cancel(download);
+            return downloadedBytes;
         }
         download.setStatus(DownloadStatus.COMPLETED);
         return downloadedBytes;
@@ -80,7 +82,7 @@ public class DownloadExecutor extends IntentService {
                     download.getUrl().substring(download.getUrl().lastIndexOf(".")));
             File destinationFile = new File(download.getTargetPath());
             long downloadedBytes = destinationFile.length();
-            return getChunks(downloadedBytes, destinationFile, download);
+            return getChunks(download.getDownloadedBytes(), destinationFile, download);
         } catch (IOException e) {
             Log.e(TAG, e.getMessage());
             return -1;

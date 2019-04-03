@@ -6,4 +6,5 @@ public class Constants {
     public static final String CONTEXT = "CONTEXT";
     public static final String STOP_DOWNLOAD = "STOP_DOWNLOAD";
     public static final String SAVED_DOWNLOADS = "SAVED_DOWNLOADS";
+    public static final String PDF_20MB = "https://www.hq.nasa.gov/alsj/a17/A17_FlightPlan.pdf";
 }

@@ -4,9 +4,6 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.util.Log;
-
-import com.google.gson.Gson;
 
 public class DownloadService extends IntentService {
 

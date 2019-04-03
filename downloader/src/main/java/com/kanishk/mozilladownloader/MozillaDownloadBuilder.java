@@ -1,5 +1,7 @@
 package com.kanishk.mozilladownloader;
 
+import android.util.Log;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
@@ -53,6 +55,7 @@ public class MozillaDownloadBuilder {
         try {
             new URL(url);
         } catch (MalformedURLException e) {
+            Log.d("MozillaDownload", "" + url);
             throw new NullPointerException("This URL is invalid and is treated as null");
         }
         if (url.indexOf(".") == -1) {
@@ -62,6 +65,9 @@ public class MozillaDownloadBuilder {
             Calendar calendar = Calendar.getInstance();
             calendar.set(2000, 0, 0);
             this.setScheduledTime(calendar.getTime());
+        }
+        if (chunkBytes == 0) {
+            chunkBytes = 1024 * 128;
         }
         return new MozillaDownload(url, targetPath, scheduledTime, timeout, maxSpeed, status, chunkBytes);
     }

@@ -2,6 +2,7 @@ package com.kanishk.mozilladownloader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /*if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().penaltyLog().detectAll().build());
+        }*/
         setContentView(R.layout.activity_main);
         startButton = findViewById(R.id.start_download);
         pauseButton = findViewById(R.id.pause_download);
@@ -35,11 +39,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (mozillaDownloader != null) {
-                    download = new MozillaDownloadBuilder().createMozillaDownload();
-                    download.setUrl("https://media.readthedocs.org/pdf/zulip/1.5.0/zulip.pdf");
-                    Calendar calendar = Calendar.getInstance();
-                    download.setScheduledTime(calendar.getTime());
-                    mozillaDownloader.scheduleDownload(download);        
+                    download = new MozillaDownloadBuilder().setUrl(Constants.PDF_20MB).createMozillaDownload();
+                    mozillaDownloader.scheduleDownload(download);
                 }
             }
         });

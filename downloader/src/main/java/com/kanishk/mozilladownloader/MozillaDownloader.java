@@ -30,19 +30,18 @@ public class MozillaDownloader {
         return intent;
     }
 
-    public boolean scheduleDownload(final MozillaDownload download) {
+    public void scheduleDownload(final MozillaDownload download) {
         download.setStatus(DownloadStatus.SCHEDULED);
-        // downloadStatusListener.onStatusChange(download);
+        Log.d(TAG, "Scheduling download");
         Intent downloadIntent = createIntent(context, download);
         // TODO: CHANGE IDENTIFIER OF PENDING INTENT TO UNIQUE INTEGER ID
         PendingIntent pendingIntent = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, 0);
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME, download.getScheduledTime().getTime(), pendingIntent);
-        boolean alarmSet = PendingIntent.getService(context, download.getUid().hashCode(), downloadIntent, PendingIntent.FLAG_NO_CREATE) != null;
-        return alarmSet;
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME, 0, pendingIntent);
     }
 
     public void pauseDownload(MozillaDownload download) {
         Log.d(TAG, "Pausing download");
+        download.setStatus(DownloadStatus.PAUSING);
         Intent pauseIntent = createIntent(context, download);
         context.startService(pauseIntent);
     }
