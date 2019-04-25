@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.tonyodev.fetch2.Priority;
+import com.tonyodev.fetch2.Request;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,6 +39,17 @@ public class Util {
         calendar.set(2000, 0, 0, 0, 0);
         MozillaDownload download = new MozillaDownloadBuilder().setUrl(url).setScheduledTime(calendar.getTime()).createMozillaDownload();
         return download;
+    }
+    public static Request setRequest(Request request, RequestParams requestParams) {
+        request.setDownloadOnEnqueue(requestParams.isDownloadOnEnqueue());
+        request.setEnqueueAction(requestParams.getEnqueueAction());
+        request.setExtras(requestParams.getExtras());
+        // TODO: Look into request.setGroupIds();
+        request.setNetworkType(requestParams.getNetworkType());
+        request.setPriority(Priority.valueOf(requestParams.getPriority()));
+        request.setTag(requestParams.getTag());
+
+        return request;
     }
     public static long findTotalBytes(String stringUrl) {
         // TODO: Use Apache NetCommons library for finding size of FTP download

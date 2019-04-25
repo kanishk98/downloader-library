@@ -18,10 +18,14 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     api 'android.arch.work:work-runtime:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.tonyodev.fetch2:fetch2:3.0.4'
