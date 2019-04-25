@@ -3,10 +3,13 @@ package com.kanishk.mozilladownloader;
 import android.content.Context;
 import android.util.Pair;
 
+import com.tonyodev.fetch2.Download;
 import com.tonyodev.fetch2.Error;
 import com.tonyodev.fetch2.Fetch;
 import com.tonyodev.fetch2.FetchConfiguration;
+import com.tonyodev.fetch2.FetchListener;
 import com.tonyodev.fetch2.Request;
+import com.tonyodev.fetch2core.DownloadBlock;
 
 import java.util.List;
 
@@ -48,11 +51,77 @@ public class FetchHandler {
         }, error -> {
             res[0] = false;
         });
+        addListener(fetch);
         return res[0];
     }
 
     public void addListener(Fetch fetch) {
-        // TODO: Attach listener and define appropriate behaviour
+        fetch.addListener(new FetchListener() {
+            @Override
+            public void onAdded(Download download) {
+
+            }
+
+            @Override
+            public void onQueued(Download download, boolean b) {
+
+            }
+
+            @Override
+            public void onWaitingNetwork(Download download) {
+
+            }
+
+            @Override
+            public void onCompleted(Download download) {
+
+            }
+
+            @Override
+            public void onError(Download download, Error error, Throwable throwable) {
+
+            }
+
+            @Override
+            public void onDownloadBlockUpdated(Download download, DownloadBlock downloadBlock, int i) {
+
+            }
+
+            @Override
+            public void onStarted(Download download, List<? extends DownloadBlock> list, int i) {
+
+            }
+
+            @Override
+            public void onProgress(Download download, long l, long l1) {
+
+            }
+
+            @Override
+            public void onPaused(Download download) {
+
+            }
+
+            @Override
+            public void onResumed(Download download) {
+
+            }
+
+            @Override
+            public void onCancelled(Download download) {
+
+            }
+
+            @Override
+            public void onRemoved(Download download) {
+
+            }
+
+            @Override
+            public void onDeleted(Download download) {
+
+            }
+        });
     }
 
 }
