@@ -2,6 +2,8 @@
 
 Android library for scheduling, pausing, resuming, and canceling downloads. Check out my thought process and offer suggestions at [the project wiki](https://github.com/kanishk98/downloader-library/wiki)! 
 
+I'm currently migrating this library to use [Fetch](https://github.com/tonyofrancis/Fetch) to avoid running into pesky errors with the core downloading logic. You can follow my progress with that [here](https://github.com/kanishk98/downloader-library/tree/fetch-migration).
+
 ## Using downloader-library in another project module
 
 Here's how to use this library for your project:
