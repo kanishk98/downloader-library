@@ -1,5 +1,6 @@
 package com.kanishk.mozilladownloader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
@@ -58,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
         pauseButton = (Button) findViewById(R.id.pause_download);
         cancelButton = (Button) findViewById(R.id.cancel_download);
         resumeButton = (Button) findViewById(R.id.resume_download);
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        if (action.equals(Intent.ACTION_VIEW)) {
+            // app opened via deep link
+            // populate EditText field with received URL
+            editText.setText(intent.getData().toString());
+        }
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
