@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MozillaDownloader</string>
+    <string name="app_name">Downloader</string>
     <string name="start_download">Start</string>
     <string name="pause_download">Pause</string>
     <string name="resume_download">Resume</string>
