@@ -1,54 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.kanishk.mozilladownloader.MainActivity">
+    android:layout_width="match_parent">
 
-    <EditText
-        android:id="@+id/url_field"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/url_field_placeholder"
-        android:inputType="textUri" />
+        android:layout_height="match_parent"
+        tools:context="com.kanishk.mozilladownloader.MainActivity">
 
-    <TimePicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/time_picker"
-        android:layout_marginBottom="10dp"
-        android:layout_below="@id/url_field" />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_download"
-        android:layout_below="@id/time_picker"
-        android:id="@+id/start_download"/>
+        <EditText
+            android:id="@+id/url_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/url_field_placeholder"
+            android:inputType="textUri" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pause_download"
-        android:layout_toRightOf="@id/start_download"
-        android:layout_below="@id/time_picker"
-        android:id="@+id/pause_download"/>
+        <DatePicker
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/date_picker"
+            android:layout_below="@id/url_field" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/cancel_download"
-        android:layout_toRightOf="@id/pause_download"
-        android:layout_below="@id/time_picker"
-        android:id="@+id/cancel_download"/>
+        <TimePicker
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_picker"
+            android:layout_marginBottom="10dp"
+            android:layout_below="@id/date_picker" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/start_download"
+            android:layout_below="@id/time_picker"
+            android:id="@+id/start_download"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/resume_download"
-        android:layout_toRightOf="@id/cancel_download"
-        android:layout_below="@id/time_picker"
-        android:id="@+id/resume_download"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/pause_download"
+            android:layout_toRightOf="@id/start_download"
+            android:layout_below="@id/time_picker"
+            android:id="@+id/pause_download"/>
 
-</RelativeLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel_download"
+            android:layout_toRightOf="@id/pause_download"
+            android:layout_below="@id/time_picker"
+            android:id="@+id/cancel_download"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/resume_download"
+            android:layout_toRightOf="@id/cancel_download"
+            android:layout_below="@id/time_picker"
+            android:id="@+id/resume_download"/>
+
+    </RelativeLayout>
+
+</ScrollView>

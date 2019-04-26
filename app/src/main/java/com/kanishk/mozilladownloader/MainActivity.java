@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
@@ -20,16 +21,17 @@ public class MainActivity extends AppCompatActivity {
     private Button resumeButton;
     private EditText editText;
     private TimePicker timePicker;
+    private DatePicker datePicker;
 
     private String TAG = getClass().getSimpleName();
 
     private Date getChosenDate() {
-        int hour, minute;
+        int hour, minute, day, month, year;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            datePicker.getDayOfMonth();
+
             hour = timePicker.getHour();
             minute = timePicker.getMinute();
-            Log.d(TAG, String.valueOf(hour));
-            Log.d(TAG, String.valueOf(minute));
         } else {
             hour = timePicker.getCurrentHour();
             minute = timePicker.getCurrentMinute();
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         editText = (EditText) findViewById(R.id.url_field);
         timePicker = (TimePicker) findViewById(R.id.time_picker);
+        datePicker = (DatePicker) findViewById(R.id.date_picker);
         startButton = (Button) findViewById(R.id.start_download);
         pauseButton = (Button) findViewById(R.id.pause_download);
         cancelButton = (Button) findViewById(R.id.cancel_download);
