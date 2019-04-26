@@ -1,14 +1,16 @@
 package com.kanishk.mozilladownloader;
 
+import com.google.gson.Gson;
 import com.tonyodev.fetch2.EnqueueAction;
 import com.tonyodev.fetch2.NetworkType;
 import com.tonyodev.fetch2.Priority;
 import com.tonyodev.fetch2.Request;
 import com.tonyodev.fetch2core.Extras;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class RequestParams {
+public class RequestParams implements Serializable {
     private Map<String, String> headers;
     private int priority;
     private NetworkType networkType;
@@ -71,5 +73,13 @@ public class RequestParams {
 
     public void setExtras(Extras extras) {
         this.extras = extras;
+    }
+
+    public String getJson() {
+        return new Gson().toJson(this);
+    }
+
+    public RequestParams fromJson(String jsonParams) {
+        return new Gson().fromJson(jsonParams, RequestParams.class);
     }
 }

@@ -9,21 +9,22 @@
 
     <EditText
         android:id="@+id/url_field"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/url_field_placeholder"
         android:inputType="textUri" />
 
-    <TextClock
+    <TimePicker
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/time_input"/>
-
+        android:id="@+id/time_picker"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/url_field" />
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start_download"
-        android:layout_below="@id/url_field"
+        android:layout_below="@id/time_picker"
         android:id="@+id/start_download"/>
 
     <Button
@@ -31,7 +32,7 @@
         android:layout_height="wrap_content"
         android:text="@string/pause_download"
         android:layout_toRightOf="@id/start_download"
-        android:layout_below="@id/url_field"
+        android:layout_below="@id/time_picker"
         android:id="@+id/pause_download"/>
 
     <Button
@@ -39,7 +40,7 @@
         android:layout_height="wrap_content"
         android:text="@string/cancel_download"
         android:layout_toRightOf="@id/pause_download"
-        android:layout_below="@id/url_field"
+        android:layout_below="@id/time_picker"
         android:id="@+id/cancel_download"/>
 
     <Button
@@ -47,7 +48,7 @@
         android:layout_height="wrap_content"
         android:text="@string/resume_download"
         android:layout_toRightOf="@id/cancel_download"
-        android:layout_below="@id/url_field"
+        android:layout_below="@id/time_picker"
         android:id="@+id/resume_download"/>
 
 </RelativeLayout>

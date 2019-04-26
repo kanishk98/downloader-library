@@ -2,45 +2,63 @@ package com.kanishk.mozilladownloader;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
+import com.tonyodev.fetch2.Error;
 import com.tonyodev.fetch2.Fetch;
+import com.tonyodev.fetch2.FetchConfiguration;
 import com.tonyodev.fetch2.Request;
+import com.tonyodev.fetch2core.Func;
 
-import java.util.Map;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+import kotlin.Pair;
 
 public class FetchHandler extends Worker {
+
+    private final String TAG = getClass().getSimpleName();
 
     public FetchHandler(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
     }
 
-    public boolean enqueueDownload(Fetch fetch, String url, String filepath, RequestParams requestParams) {
-        final boolean[] res = new boolean[1];
-        Request request = new Request(url, filepath);
-        request = new RequestUtil().setRequest(request, requestParams);
-        fetch.enqueue(request, updatedRequest -> {
-            res[0] = true;
-        }, error -> {
-            res[0] = false;
+    private Fetch getDownloader() {
+        FetchConfiguration downloadConfig = new FetchConfiguration.Builder(getApplicationContext())
+                .build();
+        Fetch fetch = Fetch.Impl.getInstance(downloadConfig);
+        return fetch;
+    }
+
+    public void enqueueDownload(Fetch fetch, String url, String filepath, RequestParams requestParams) {
+        List<Request> requests = new ArrayList<>();
+        requests.add(new Request(url, filepath));
+        fetch.enqueue(requests, new Func<List<Pair<Request, Error>>>() {
+            @Override
+            public void call(@NotNull List<Pair<Request, Error>> result) {
+                for (Pair<Request, Error> pair : result) {
+                    if (pair.component2() != null) {
+                        // TODO: Convert to real error-handling method
+                        Log.e(TAG, String.valueOf(pair.component2().getHttpResponse()));
+                    }
+                }
+            }
         });
-        // addListener(fetch);
-        return res[0];
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        Map<String, Object> inputData = getInputData().getKeyValueMap();
-        Fetch fetch = (Fetch) inputData.get(Constants.FETCH_INSTANCE);
-        RequestParams requestParams = (RequestParams) inputData.get(Constants.REQUEST_PARAMS);
-        String url = (String) inputData.get(Constants.DOWNLOAD_URL);
-        String filepath = (String) inputData.get(Constants.DOWNLOAD_FILEPATH);
-        if (enqueueDownload(fetch, url, filepath, requestParams)) {
-            return Result.success();
-        }
-        return Result.failure();
+        Fetch fetch = getDownloader();
+        RequestParams requestParams = new RequestParams().fromJson(getInputData().getString(Constants.REQUEST_PARAMS));
+        String url = getInputData().getString(Constants.DOWNLOAD_URL);
+        String filepath = getInputData().getString(Constants.DOWNLOAD_FILEPATH);
+        enqueueDownload(fetch, url, filepath, requestParams);
+        // status below only indicates that enqueueDownload() was called
+        return Result.success();
     }
 }

@@ -1,7 +1,7 @@
 package com.kanishk.mozilladownloader;
 
 public class Constants {
-    public static final String FETCH_INSTANCE = "FETCH_INSTANCE";
+    public static final String CONTEXT = "CONTEXT";
     public static final String DOWNLOAD_URL = "DOWNLOAD_URL";
     public static final String DOWNLOAD_FILEPATH = "DOWNLOAD_FILEPATH";
     public static final String REQUEST_PARAMS = "REQUEST_PARAMS";
