@@ -27,13 +27,6 @@ public class FetchHandler extends Worker {
         super(context, workerParams);
     }
 
-    private Fetch getDownloader() {
-        FetchConfiguration downloadConfig = new FetchConfiguration.Builder(getApplicationContext())
-                .build();
-        Fetch fetch = Fetch.Impl.getInstance(downloadConfig);
-        return fetch;
-    }
-
     public void enqueueDownload(Fetch fetch, String url, String filepath, RequestParams requestParams) {
         List<Request> requests = new ArrayList<>();
         requests.add(new Request(url, filepath));
@@ -53,7 +46,7 @@ public class FetchHandler extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Fetch fetch = getDownloader();
+        Fetch fetch = FetchUtil.getDownloader(getApplicationContext());
         RequestParams requestParams = new RequestParams().fromJson(getInputData().getString(Constants.REQUEST_PARAMS));
         String url = getInputData().getString(Constants.DOWNLOAD_URL);
         String filepath = getInputData().getString(Constants.DOWNLOAD_FILEPATH);
